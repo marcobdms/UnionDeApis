@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../server');
 const userMiddleware = require('../middleware/users.js');
 
-routes.get('/:id', (req, res) =>{
+routes.get('/planta/:id', (req, res) =>{
     const id = req.params.id;
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
@@ -21,17 +21,21 @@ routes.get('/:id', (req, res) =>{
     });
 });
 
+routes.get('/plantas', (req, res) =>{
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err);
 
-routes.get('/', (req, res)=>{
-    req.getConnection((err, conn)=>{
-        if(err) return res.send(err)
-
-        conn.query('SELECT * FROM users', (err, rows)=>{
-            if(err) return res.send(err)
-            res.json(rows)
+        conn.query('SELECT * FROM Plants',  (err, rows) => {
+            if (err) return res.send(err);
+            if (rows.length === 0) {
+                res.status(404).json({ error: 'Elemento no encontrado' });
+            } else {
+                res.json(rows);
+            }
         });
     });
 });
+
 
 routes.post('/', (req, res)=>{
     req.getConnection((err, conn)=>{
@@ -58,7 +62,16 @@ routes.delete('/:id', (req, res)=>{
 
 //isma route//
 
+routes.get('/', (req, res)=>{
+    req.getConnection((err, conn)=>{
+        if(err) return res.send(err)
 
+        conn.query('SELECT * FROM users', (err, rows)=>{
+            if(err) return res.send(err)
+            res.json(rows)
+        });
+    });
+});
 
 //register route
 routes.post('/sign-up', userMiddleware.validateRegister, (req, res) => {
