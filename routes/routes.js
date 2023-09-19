@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const db = require('../server');
 const userMiddleware = require('../middleware/users.js');
 
-routes.get('/planta/:id', (req, res) =>{
+routes.get('/planta/:id', (req, res) => {
     const id = req.params.id;
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
@@ -21,11 +21,11 @@ routes.get('/planta/:id', (req, res) =>{
     });
 });
 
-routes.get('/plantas', (req, res) =>{
+routes.get('/plantas', (req, res) => {
     req.getConnection((err, conn) => {
         if (err) return res.send(err);
 
-        conn.query('SELECT * FROM Plants',  (err, rows) => {
+        conn.query('SELECT * FROM Plants', (err, rows) => {
             if (err) return res.send(err);
             if (rows.length === 0) {
                 res.status(404).json({ error: 'Elemento no encontrado' });
@@ -37,38 +37,30 @@ routes.get('/plantas', (req, res) =>{
 });
 
 
-routes.post('/', (req, res)=>{
-    req.getConnection((err, conn)=>{
-        if(err) return res.send(err)
-        conn.query('INSERT INTO Plants SET ?', [req.body], (err, rows)=>{
-            if(err) return res.send(err)
+routes.post('/', (req, res) => {
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err)
+        conn.query('INSERT INTO Plants SET ?', [req.body], (err, rows) => {
+            if (err) return res.send(err)
             res.send('datos insertados')
         });
     });
 });
 
-routes.delete('/:id', (req, res)=>{
-    req.getConnection((err, conn)=>{
-        if(err) return res.send(err)
-        conn.query('DELETE FROM Plants WHERE id = ?', [req.params.id], (err, rows)=>{
-            if(err) return res.send(err)
-
-            res.send('datos borrados')
-        });
-    });
-});
-
-
 
 //isma route//
 
-routes.get('/', (req, res)=>{
-    req.getConnection((err, conn)=>{
-        if(err) return res.send(err)
+routes.get('/usuarios', (req, res) => {
+    req.getConnection((err, conn) => {
+        if (err) return res.send(err);
 
-        conn.query('SELECT * FROM users', (err, rows)=>{
-            if(err) return res.send(err)
-            res.json(rows)
+        conn.query('SELECT * FROM users', (err, rows) => {
+            if (err) return res.send(err);
+            if (rows.length === 0) {
+                res.status(404).json({ error: 'Elemento no encontrado' });
+            } else {
+                res.json(rows);
+            }
         });
     });
 });
